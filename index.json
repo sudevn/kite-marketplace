@@ -1,0 +1,9 @@
+{
+  "name": "Kite starter marketplace",
+  "items": [
+    { "id": "meeting-notes", "kind": "skill", "name": "Meeting notes", "description": "Turn rough notes or a transcript into a summary, decisions and action items.", "url": "skills/meeting-notes.md" },
+    { "id": "explain-code", "kind": "skill", "name": "Explain code", "description": "Walk through what a piece of code does, step by step, and flag risks.", "url": "skills/explain-code.md" },
+    { "id": "focus-timer", "kind": "app", "name": "Focus timer", "description": "A 25/5 focus timer that keeps a count of today's sessions.", "url": "apps/focus-timer.html" },
+    { "id": "scratchpad", "kind": "app", "name": "Scratchpad", "description": "Quick notes that are saved automatically.", "url": "apps/scratchpad.html" }
+  ]
+}

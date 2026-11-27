@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scratchpad</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; height: 100vh; display: flex; flex-direction: column; font-family: -apple-system, system-ui, sans-serif; background: Canvas; color: CanvasText; }
+  textarea { flex: 1; border: 0; outline: none; resize: none; padding: 16px; font-family: inherit; font-size: 15px; line-height: 1.6; background: transparent; color: inherit; }
+  .status { font-size: 11px; opacity: .6; padding: 4px 16px 8px; }
+</style>
+</head>
+<body>
+<textarea id="t" placeholder="Jot something down…" autofocus></textarea>
+<div class="status" id="s">Saved</div>
+<script>
+  const t = document.getElementById("t"), s = document.getElementById("s");
+  let timer;
+  t.addEventListener("input", () => {
+    s.textContent = "Saving…";
+    clearTimeout(timer);
+    timer = setTimeout(async () => { await window.kite?.storage.set("text", t.value); s.textContent = "Saved"; }, 400);
+  });
+  window.kite?.storage.get("text").then((v) => { if (typeof v === "string") t.value = v; });
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Focus timer</title>
+<style>
+  :root { color-scheme: light dark; --accent: #7c5cff; }
+  body { margin: 0; font-family: -apple-system, system-ui, sans-serif; display: grid; place-items: center; min-height: 100vh; background: Canvas; color: CanvasText; }
+  .wrap { text-align: center; }
+  .mode { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; opacity: .7; }
+  .time { font-size: 64px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 6px 0 14px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 999px; border: 1px solid color-mix(in srgb, CanvasText 25%, transparent); background: transparent; color: inherit; cursor: pointer; margin: 0 4px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .done { margin-top: 16px; font-size: 13px; opacity: .8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mode" id="mode">Focus</div>
+  <div class="time" id="time">25:00</div>
+  <button class="primary" id="go">Start</button>
+  <button id="reset">Reset</button>
+  <div class="done" id="done"></div>
+</div>
+<script>
+  const FOCUS = 25 * 60, BREAK = 5 * 60;
+  let left = FOCUS, focus = true, timer = null, today = { date: "", count: 0 };
+  const $ = (id) => document.getElementById(id);
+  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  const day = () => new Date().toISOString().slice(0, 10);
+  function draw() {
+    $("time").textContent = fmt(left);
+    $("mode").textContent = focus ? "Focus" : "Break";
+    $("go").textContent = timer ? "Pause" : "Start";
+    $("done").textContent = `${today.count} focus session${today.count === 1 ? "" : "s"} today`;
+  }
+  async function finish() {
+    if (focus) {
+      today.count += 1;
+      await window.kite?.storage.set("today", today);
+    }
+    focus = !focus;
+    left = focus ? FOCUS : BREAK;
+  }
+  $("go").onclick = () => {
+    if (timer) { clearInterval(timer); timer = null; }
+    else timer = setInterval(async () => { left -= 1; if (left <= 0) await finish(); draw(); }, 1000);
+    draw();
+  };
+  $("reset").onclick = () => { clearInterval(timer); timer = null; focus = true; left = FOCUS; draw(); };
+  (async () => {
+    const saved = await window.kite?.storage.get("today");
+    today = saved && saved.date === day() ? saved : { date: day(), count: 0 };
+    draw();
+  })();
+  draw();
+</script>
+</body>
+</html>
