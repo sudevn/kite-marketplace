@@ -23,3 +23,6 @@ Mini apps run in a sandbox with no access to Kite or your files, and can only
 reach the network over https. To keep data, they use
 `await kite.storage.get(key)`, `await kite.storage.set(key, value)` and
 `await kite.storage.all()`.
+
+This folder is published to [sudevn/kite-marketplace](https://github.com/sudevn/kite-marketplace)
+(Kite's default index) with `scripts/publish-marketplace.sh`.
